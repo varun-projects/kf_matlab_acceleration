@@ -1,0 +1,36 @@
+
+
+<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyADhS1yy_K-uU5bDojlapH-NdKWQ23SXX8",
+    authDomain: "fusion2018-1be6d.firebaseapp.com",
+    databaseURL: "https://fusion2018-1be6d.firebaseio.com",
+    projectId: "fusion2018-1be6d",
+    storageBucket: "fusion2018-1be6d.appspot.com",
+    messagingSenderId: "986913864915"
+  };
+  firebase.initializeApp(config);
+</script>
+
+
+
+
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+<script>
+d3.csv("loc_uncertinity_cloumn_table.csv", function(err, data) {
+
+    if (err) console.log(err) // error messages
+   // var database = firebase.database();
+    firebase.database().ref('orange_line_ride_3/').update(data)
+    console.log(data);   // should contain the parsed csv
+    alert("Data uploaded to firebase");
+});
+
+
+</script>

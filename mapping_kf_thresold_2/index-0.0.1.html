@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <title>SAFENETS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
+  <script type="text/javascript" src="scripts/safenets.firebase-0.1.js"> </script>
+  <script type="text/javascript" src="scripts/safenets.gmaps-0.1.js"> </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIRB5ZsI57ivmVr7ebwCIVQKXN_mbUj9M&callback=func_map" async defer></script>
+  <script type="text/javascript" src="scripts/safenets.markers-0.1.js"> </script>
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
+
+<style type="text/css">
+  #map {
+    height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      }
+</style>
+
+<body>
+    <div id="map" style="width: 100%; height: 80%"></div>
+
+    <div id="floating-panel">
+
+      <img src="images/rri1.png" width=15px></img>
+            <input onclick="addRRI1Marker();" type=button value="Raw gps">
+      <img src="images/rri2.png" width=15px></img>
+            <input onclick="addRRI2Marker();" type=button value="Kalman coordinates">
+      <img src="images/rri3.png" width=15px></img>
+            <input onclick="addRRI3Marker();" type=button value="RRI 3">
+      <img src="images/rri4.png" width=15px></img>
+            <input onclick="addRRI4Marker();" type=button value="RRI 4">
+      <img src="images/rri5.png" width=15px></img>
+            <input onclick="addRRI5Marker();" type=button value="RRI 5">
+
+      <input onclick="addAllMarker();" type=button value="Show All">
+      <input onclick="resetAllMarkers();" type=button value="Reset">
+
+<!--
+      <div>
+        <h4>Load data</h4>
+        <label for="file">Choose file to upload</label>
+        <input type="file" id="file" name="file" accept=".csv" multiple>
+      </div>
+      <div>
+        <button type="button" onclick=replaceRRIData>Replace database</button>
+        <button type="button" onclick=appendRRIData>Append database</button>
+      </div>
+-->
+</div>
+
+
+
+
+</body>
+</html>

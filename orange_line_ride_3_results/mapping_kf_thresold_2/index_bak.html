@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+
+
+<!--    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <title>SAFENETS</title>
+
+<!-- mv to main.css         -->
+    <style>
+       #left_pane {
+        height: 600px;
+        width: 20%;
+        align:left;
+        float:left;
+       }
+
+      #map{
+        height:600px;
+        width:80%;
+        float: right;
+        align:left;
+      }
+
+      #project_details{
+        height:auto;
+        width:auto;
+        float: center;
+      }
+
+      #markers{
+      padding-top: 5px;
+      }
+
+      #summary{
+      padding-top: 5px;
+      }
+
+      #reporting_period{
+      padding-top: 0px;
+      }
+
+      .list_options{
+        margin-left: :0px;
+        margin-top: 0px;
+        padding-top: 0px;
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+
+
+<body>
+
+<div align="center">
+<h1>SAFENETS Road Condition Visualizer</h1>
+<hr/>
+</div>
+
+
+
+<!--controls for road conditions visualizer-->
+<div id="left_pane">
+<h3>Mapper configuration</h3>
+
+<img src="images/rri3.png"></img>
+<input onclick="addPavedRoadMarker();" type=button value="RRI">
+
+
+<form>       <!-- add later...  action="/redraw.php">  -->
+<!-- date range for incident reports;
+    if "rep_range_all"
+      load all available data in firebase
+    else
+      load data from  "start_date" to "end_date" -->
+
+<div id="reporting_period">
+<fieldset>
+<legend>Incident Reporting Period: </legend>
+    <input type="radio" name="rep_period" id="rep_all" checked/> All available<br/>
+    <input type="radio" name="rep_period" id="rep_range"/> From:<br/>
+    <div class="list_options">
+      <input type="text" name="start_date" id="start_date"/><br/>
+      To:<br/><input type="text" name="end_date" id="end_date"/>
+    </div>
+</fieldset>
+</div>
+
+<div id="markers">
+<!-- choose which markers to plot         -->
+<fieldset>
+<legend>Choose Markers: </legend>
+<!-- road roughenss index, let's do simple RMS cutoofs for now -->
+  <input type="checkbox" onclick="addPavedRoadMarker();" name="road_roughness" id="road_roughness" checked/> Road roughness<br/>
+  <div class="list_options">
+    <input type="radio" name="rri" id="rri_all" checked/><img src="images/rri1.png" alt="rri1 "width=10px><img src="images/rri2.png" width=10px><img src="images/rri3.png" width=10px><img src="images/rri4.png" width=10px><img src="images/rri5.png" width=10px> All levels<br/>
+    <input type="radio" name="rri" id="rri_range"/> Min roughness: <span id="rri_min_label"> 1 </span>
+        <input type="range" min="1" max="5" value="1" name="rri_min" id="rri_min"/>
+  </div>
+
+  <!-- road abnormalities we can detect, potholes, cracks, bumps, etc. -->
+  <input type="checkbox" name="road_abnorms" id="road_abnorms"/> Abnormalities:<br/>
+  <div class="list_options">
+    <input type="checkbox" name="pot_holes" id="pot_holes"/><img src="images/pot_holes.png" width=10px> Potholes<br/>
+    <input type="checkbox" name="cracks" id="cracks"/><img src="images/cracks.png" width=10px> Cracks<br/>
+    <input type="checkbox" name="bumps" id="bumps"/><img src="images/bumps.png" width=10px> Bumps<br/>
+  </div>
+
+    <!-- other conditions generated high RMS, e.g., railroads, expansion gaps, etc. -->
+    <input type="checkbox" name="road_other" id="road_other"/> Other:<br/>
+    <div class="list_options">
+      <input type="checkbox" name="speed_bumps" id="speed_bumps"/><img src="images/speed_bumps.png" width=10px> Speed bumps<br/>
+      <input type="checkbox" name="expansion_gaps" id="expansion_gaps"/><img src="images/expansion_gaps.png" width=10px> Expansion gaps<br/>
+      <input type="checkbox" name="railway_crossings" id="railway_crossings"/><img src="images/railway_crossings.png" width=10px> Railway crossings<br/>
+    </div>
+</fieldset>
+</div>
+</form>
+
+<div id="summary">
+<fieldset>
+<legend>Data Summary: </legend>
+<ul>
+<li id="no_reports"> Total incident reports: </li>
+<li id="min_gps_acc"> Avg. location accuracy: </li>
+<li id="min_gps_acc"> Avg. reports per incident: </li>
+</ul>
+
+</fieldset>
+</div>
+
+</div>
+
+<!-- map pane, loads google map and markers from firebase -->
+  <div id="map"></div>
+
+<!-- footer contents-->
+<hr/>
+<div id="project_details" class="w3-container">
+  <p>The work here is a collaboration between City of Lowell Public Works Department and University of Massachusetts Lowell (UMass-Lowell) Francis College of Engineering, lead by Prof. Thanuka Wickramarathne, who is an assistant professor with the Department of Electrical & Computer Engineering.</p>
+<ul>
+  <li><strong>Research Team:</strong> Prof. Thanuka Wickramarathne (Lead-investigator), Varun Garg, Michael Nuzzo, Pakin Pongcheewin, Danniel Battis (All with UMass-Lowell)</li>
+  <li><strong>Collaborators:</strong> Prof. Peter Bauer, Joe Palasek (All with University of Notre Dame)</li>
+  <li><strong>Community Engagement Coordinator:</strong> Robin Toof, (UMass-Lowell)</li>
+</ul>
+</div>
+
+<hr/>
+
+<!-- logos, should we insert ND at this point?-->
+<div align="center" width=auto id="footer">
+Copyright &#9400; S&H Fusion Lab, University of Massachusetts Lowell, Lowell, MA 01854
+</div>
+
+
+
+
+
+<!-- scripts **************************************************************  -->
+
+
+
+
+<script>
+  function initMap(){
+
+    // map init options;
+    var map_options = {
+      zoom: 12,
+      center: {lat:42.6501, lng:-71.3240}
+    };
+
+    var map = new google.maps.Map(document.getElementById('map'),map_options);
+
+  }
+
+</script>
+
+<!-- mapper code
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIRB5ZsI57ivmVr7ebwCIVQKXN_mbUj9M&callback=initMap">
+</script>
+-->
+
+<!-- varun's code -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIRB5ZsI57ivmVr7ebwCIVQKXN_mbUj9M&callback=func_map" async defer></script>
+
+
+<!-- date picker for Safari -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$(function() {
+  $("#datepicker" ).datepicker();
+  $("#start_date" ).datepicker();
+  $("#end_date" ).datepicker();
+
+
+} );
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--  ***************** Plotting codes  ***************** -->
+
+<script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
+
+<script>
+function myFunction() {
+    setInterval(func_map(), 3000);
+}
+</script>
+
+<script>
+//   var key=AIzaSyCmg5a1uzEjbErc_raNE6sZ0ozsS3gyT5o
+  // Initialize Firebase
+
+
+  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
+var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+var icons = {
+  pothole: {
+    icon: iconBase + 'parking_lot_maps.png'
+  },
+  crack: {
+    icon: iconBase + 'library_maps.png'
+  },
+  dirt: {
+    icon: iconBase + 'info-i_maps.png'
+  },
+  rough: {
+    icon: 'm1.png'
+  },
+  paved: {
+    icon: 'm3.png'
+  },
+  rri1: {
+    icon: 'images/rri1.png'
+  },
+  rri2: {
+    icon: 'images/rri2.png'
+  },
+  rri3: {
+    icon: 'images/rri3.png'
+  },
+  rri4: {
+    icon: 'images/rri4.png'
+  },
+  rri5: {
+    icon: 'images/rri5.png'
+  }
+};
+
+
+
+  var list = [];
+  var keys;
+  var map;
+
+  var markers = [];
+function func_map(){
+///Defining the map
+
+
+//// firebase data parsing code
+
+ var config = {
+    apiKey: "AIzaSyADhS1yy_K-uU5bDojlapH-NdKWQ23SXX8",
+    authDomain: "fusion2018-1be6d.firebaseapp.com",
+    databaseURL: "https://fusion2018-1be6d.firebaseio.com",
+    projectId: "fusion2018-1be6d",
+    storageBucket: "fusion2018-1be6d.appspot.com",
+    messagingSenderId: "986913864915"
+  };
+  firebase.initializeApp(config);
+
+
+
+
+
+
+
+
+var database = firebase.database();
+
+var ref = firebase.database().ref("android_experiment_bus_trace3");
+//var ref = firebase.database().ref("locations/cl");
+ref.on("value", function(snapshot) {
+   //console.log(snapshot.val());
+
+list=snapshot.val();
+
+ ref.set(list);
+  keys = Object.keys(list);
+ //var i , new_marker;
+
+
+
+
+
+
+
+
+//////////////reference snapshot firebase ends here
+
+}, function (error) {
+   console.log("Error: " + error.code);
+});
+}
+/*
+var loc1 =0;
+var loc =firebase.database().ref().child("latitude");
+loc.on('value', function(datasnapshot){
+loc1 = datasnapshot;
+});
+
+console.log(loc1);
+*/
+
+////////////// Paved road
+function addPavedRoadMarker() {
+
+console.log("created function started");
+var i;
+for( i=0 ; i< keys.length; i++){
+var id = keys[i];
+if (list[id].type =='paved'){
+var mark_lat =list[id].latitude
+//+ Math.round(Math.random()*10)/1000000;
+//+ math.random* (1/10000000);
+var mark_long = list[id].longitude
+//+Math.round(Math.random()*10)/1000000;
+//+ math.random*(1/10000000);
+console.log("latitude"+mark_lat);
+console.log("longitude" +mark_long);
+
+
+var latlong = new google.maps.LatLng(mark_lat,mark_long);
+//var test_lat= 43.93407784; var test_long=11.34867469;
+//var test_lat= 41.99732762; var test_long=-87.76379072;
+var test_lat= mark_lat; var test_long=mark_long;
+var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(test_lat,test_long),
+          icon: icons["paved"].icon,
+          map: map
+        });
+
+
+}
+}
+
+markers.push(marker);
+}
+
+
+
+  </body>
+</html>

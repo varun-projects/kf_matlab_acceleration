@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <title>SAFENETS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+  <script type="text/javascript" src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
+  <script type="text/javascript" src="scripts/safenets.firebase-0.1.js"> </script>
+  <script type="text/javascript" src="scripts/safenets.gmaps-0.1.js"> </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIRB5ZsI57ivmVr7ebwCIVQKXN_mbUj9M&callback=func_map" async defer></script>
+  <script type="text/javascript" src="scripts/safenets.markers-0.1.js"> </script>
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
+
+<style>
+
+body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+
+#map {
+    height: 100%;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      }
+</style>
+
+<body>
+
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-card" id="myNavbar">
+    <a href="#home" class="w3-bar-item w3-button w3-wide"><strong>SAFENETS</strong></a>
+
+    <!-- Right-sided navbar links -->
+    <div class="w3-right w3-hide-small">
+      <a href="#research" class="w3-bar-item w3-button"><i class="fa fa-th"></i> Reporting Period</a>
+      <a href="#publications" class="w3-bar-item w3-button w3-hide-medium"><i class="fa fa-list-ul"></i> Markers</a>
+      <a href="#team" class="w3-bar-item w3-button w3-hide-medium"><i class="fa fa-group"></i> About</a>
+      <!--
+      <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i> Contact Us</a>
+      -->
+    </div>
+
+
+  </div>
+</div>
+
+
+<div class="w3-container" id="map" style="width: 100%; height: 92%"></div>
+
+
+<div class="w3-bar" id="floating-panel">
+<p>
+  <button class="w3-button w3-green w3-padding-small w3-hover-black" style="width: 10%" onclick="addRRI1Marker();">RRI1</button>
+  <button class="w3-button w3-lime w3-padding-small w3-hover-black" style="width: 10%" onclick="addRRI2Marker();">RRI2</button>
+  <button class="w3-button w3-yellow w3-padding-small w3-hover-black" style="width: 10%" onclick="addRRI3Marker();">RRI3</button>
+  <button class="w3-button w3-orange w3-padding-small w3-hover-black" style="width: 10%" onclick="addRRI4Marker();">RRI4</button>
+  <button class="w3-button w3-red w3-padding-small w3-hover-black" style="width: 10%" onclick="addRRI5Marker();">RRI5</button>
+
+  <button class="w3-button w3-grey w3-padding-small w3-hover-black" style="width: 20%" onclick="addAllMarker();">Show All</button>
+  <button class="w3-button w3-dark-grey w3-padding-small w3-hover-black w3-right" style="width: 10%" onclick="resetAllMarkers();">Reset</button>
+</p>
+</div>
+
+
+
+</body>
+</html>
